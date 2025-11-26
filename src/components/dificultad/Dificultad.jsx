@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { fetchDifficulties } from '../../services/api';
 import { BotonDificultad } from './BotonDificultad';
 import './dificultad.css';
-export const Dificultad = () => {
+
+// 1. Recibimos una nueva prop: onDificultadSeleccionada
+export const Dificultad = ({ onDificultadSeleccionada }) => {
   // 1. Creamos un estado para almacenar las dificultades. Inicialmente es un array vacío.
   const [dificultades, setDificultades] = useState([]);
 
@@ -21,18 +23,17 @@ export const Dificultad = () => {
     cargarDificultades();
   }, []); // El array vacío [] asegura que el efecto se ejecute solo una vez.
 
-  const handleDificultadClick = (dificultad) => {
-    // Aquí irá la lógica para iniciar el juego con la dificultad seleccionada.
-    console.log(`Dificultad seleccionada: ${dificultad}`);
-  };
-
   return (
     <>
       <h3 >Selecciona una dificultad</h3>
       <div className='dificultad-botones'>
         {/* 4. Ahora 'dificultades' es un array y .map() funcionará correctamente. */}
         {dificultades.map((dificultad) => (
-          <BotonDificultad key={dificultad} texto={dificultad} onClick={() => handleDificultadClick(dificultad)} />
+          <BotonDificultad
+            key={dificultad}
+            texto={dificultad}
+            onClick={() => onDificultadSeleccionada(dificultad.toLowerCase())}
+          />
         ))}
       </div>
     </>
