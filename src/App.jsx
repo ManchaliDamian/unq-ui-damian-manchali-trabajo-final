@@ -1,5 +1,6 @@
 
 import './App.css';
+import { Dificultad } from './components/dificultad/Dificultad';
 
 const App = () => {
 
@@ -8,7 +9,7 @@ const App = () => {
       <header className="app-header">
         <h1>Preguntados</h1>
       </header>
-      
+      <Dificultad />
     </div>
   );
 };
