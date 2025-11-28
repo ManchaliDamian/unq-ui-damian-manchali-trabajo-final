@@ -3,8 +3,8 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  width: 95%; /* Ocupa casi todo el ancho en pantallas pequeñas */
-  max-width: 800px; /* Ancho máximo para pantallas grandes */
+  width: 95%;
+  max-width: 800px;
   padding: 1rem;
   background-color: #e9ecef;
   justify-content: flex-start;
@@ -20,7 +20,7 @@
 }
 
 .app-header h1 {
-  font-size: clamp(2rem, 8vw, 3rem); /* Tamaño de fuente adaptable */
+  font-size: clamp(2rem, 8vw, 3rem);
   color: #420929;
   font-family: 'Arial', sans-serif;
   font-weight: bold;

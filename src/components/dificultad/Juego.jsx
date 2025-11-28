@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchQuestions, submitAnswer } from '../../services/api';
 import { BotonDificultad } from './BotonDificultad';
 import './dificultad.css'; 
@@ -10,7 +10,7 @@ export const Juego = ({ dificultad, onReiniciar }) => {
   const [cargando, setCargando] = useState(true);
   const [puntaje, setPuntaje] = useState(0);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
-  const [resultadoRespuesta, setResultadoRespuesta] = useState(null);
+  const [error, setError] = useState(null);
   const [juegoTerminado, setJuegoTerminado] = useState(false);
 
   useEffect(() => {
@@ -19,14 +19,14 @@ export const Juego = ({ dificultad, onReiniciar }) => {
         const data = await fetchQuestions(dificultad);
         setPreguntas(data);
       } catch (error) {
-        console.error('Error al cargar las preguntas:', error);
+        setError("No se pudieron cargar las preguntas. Por favor, reinicia el juego.");
       } finally {
         setCargando(false);
       }
     };
 
     cargarPreguntas();
-  }, [dificultad]); // Se ejecuta si la dificultad cambia
+  }, [dificultad]);
 
   const handleOpcionClick = async (opcionKey) => {
 
@@ -40,23 +40,19 @@ export const Juego = ({ dificultad, onReiniciar }) => {
       setResultadoRespuesta(resultado);
 
       if (resultado.answer) {
-
         setPuntaje(puntajeAnterior => puntajeAnterior + 1);
-
       }
     } catch (error) {
-      console.error('Error al enviar la respuesta:', error);
+      setError("Hubo un problema al verificar tu respuesta. Inténtalo de nuevo.");
     }
   };
 
   const handleSiguientePregunta = () => {
 
-    if (preguntaActual < preguntas.length - 1) {
-      
+    if (preguntaActual < preguntas.length - 1) {      
       setPreguntaActual(preguntaActual + 1);
       setOpcionSeleccionada(null);
       setResultadoRespuesta(null);
-
     } else {
       setJuegoTerminado(true);
     }
@@ -66,6 +62,10 @@ export const Juego = ({ dificultad, onReiniciar }) => {
     return <div>Cargando preguntas...</div>;
   }
 
+  if (error) {
+    return <div className="error-mensaje">{error}</div>;
+  }
+
   const pregunta = preguntas[preguntaActual];
 
   if (juegoTerminado) {
@@ -73,6 +73,7 @@ export const Juego = ({ dificultad, onReiniciar }) => {
       <>
         <h1>Juego Terminado</h1>
         <h2>Puntaje Final: {puntaje} de {preguntas.length}</h2>
+        <h2>Dificultad elegida: {dificultad}</h2>
         <h3>Querés jugar otra vez?</h3>
         <BotonDificultad texto="Reiniciar Juego" onClick={onReiniciar} />
       </>
@@ -97,10 +98,8 @@ export const Juego = ({ dificultad, onReiniciar }) => {
         {opciones.map((opcion) => {
           let estadoBoton = '';
           if (opcionSeleccionada === opcion.key) {
-
             if (resultadoRespuesta)
               estadoBoton = resultadoRespuesta.answer ? 'correcto' : 'incorrecto';
-            
           }
           return (
             <BotonDificultad

@@ -1,6 +1,6 @@
 .botones {
     padding: 15px 25px;
-    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-size: clamp(1rem, 4vw, 1.2rem); /* mantiene el tamaño de fuente entre 1rem y 1.2rem dependiendo el ancho de la pantalla */
     border: none;
     border-radius: 8px;
     background-color: #007bff;
@@ -19,7 +19,7 @@
 }
 
 .botones.incorrecto {
-    background-color: #dc3545; 
+    background-color: #dc3545;
 }
 
 .botones:disabled {

@@ -5,18 +5,14 @@ import { Dificultad } from './components/dificultad/Dificultad';
 import { Juego } from './components/dificultad/Juego';
 
 const App = () => {
-  // Estado para saber qué vista mostrar: 'dificultad' o 'juego'
   const [vista, setVista] = useState('dificultad');
-  // Estado para guardar la dificultad elegida
   const [dificultad, setDificultad] = useState(null);
 
-  // Esta función se la pasaremos a Dificultad.jsx
   const iniciarJuego = (dificultadSeleccionada) => {
     setDificultad(dificultadSeleccionada);
-    setVista('juego'); // Cambiamos la vista para mostrar el componente Juego
+    setVista('juego');
   };
 
-  // Esta función se la pasaremos a Juego.jsx para volver al inicio
   const reiniciarJuego = () => {
     setDificultad(null);
     setVista('dificultad');
