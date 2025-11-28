@@ -16,6 +16,12 @@ const App = () => {
     setVista('juego'); // Cambiamos la vista para mostrar el componente Juego
   };
 
+  // Esta función se la pasaremos a Juego.jsx para volver al inicio
+  const reiniciarJuego = () => {
+    setDificultad(null);
+    setVista('dificultad');
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -23,7 +29,7 @@ const App = () => {
       </header>
       <main className="app-content">
         {vista === 'dificultad' && <Dificultad onDificultadSeleccionada={iniciarJuego} />}
-        {vista === 'juego' && <Juego dificultad={dificultad} />}
+        {vista === 'juego' && <Juego dificultad={dificultad} onReiniciar={reiniciarJuego} />}
       </main>
     </div>
   );

@@ -3,13 +3,15 @@ import { fetchQuestions, submitAnswer } from '../../services/api';
 import { BotonDificultad } from './BotonDificultad';
 import './dificultad.css'; 
 
-export const Juego = ({ dificultad }) => {
+export const Juego = ({ dificultad, onReiniciar }) => {
   const [preguntas, setPreguntas] = useState([]);
   const [preguntaActual, setPreguntaActual] = useState(0);
   const [cargando, setCargando] = useState(true);
+  const [puntaje, setPuntaje] = useState(0);
   // Nuevos estados para manejar la respuesta
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
   const [resultadoRespuesta, setResultadoRespuesta] = useState(null);
+  // Este estado ahora indica que se han respondido todas las preguntas.
   const [juegoTerminado, setJuegoTerminado] = useState(false);
 
   useEffect(() => {
@@ -17,7 +19,6 @@ export const Juego = ({ dificultad }) => {
       try {
         const data = await fetchQuestions(dificultad);
         setPreguntas(data);
-        console.log('Preguntas cargadas:', data);
       } catch (error) {
         console.error('Error al cargar las preguntas:', error);
       } finally {
@@ -30,7 +31,7 @@ export const Juego = ({ dificultad }) => {
 
   const handleOpcionClick = async (opcionKey) => {
     // Si ya se respondió o el juego terminó, no hacer nada.
-    if (opcionSeleccionada || juegoTerminado) return;
+    if (opcionSeleccionada) return;
 
     const preguntaId = preguntas[preguntaActual].id;
     setOpcionSeleccionada(opcionKey);
@@ -39,12 +40,25 @@ export const Juego = ({ dificultad }) => {
       const resultado = await submitAnswer(preguntaId, opcionKey);
       setResultadoRespuesta(resultado);
 
-      if (!resultado.answer) {
-        // Si la respuesta es incorrecta, el juego termina.
-        setJuegoTerminado(true);
+      if (resultado.answer) {
+        // Si la respuesta es correcta, incrementamos el puntaje.
+        setPuntaje(puntajeAnterior => puntajeAnterior + 1);
       }
     } catch (error) {
       console.error('Error al enviar la respuesta:', error);
+    }
+  };
+
+  const handleSiguientePregunta = () => {
+    // Verificamos si hay más preguntas
+    if (preguntaActual < preguntas.length - 1) {
+      setPreguntaActual(preguntaActual + 1);
+      // Reseteamos los estados para la nueva pregunta
+      setOpcionSeleccionada(null);
+      setResultadoRespuesta(null);
+    } else {
+      // Si no hay más preguntas, terminamos el juego.
+      setJuegoTerminado(true);
     }
   };
 
@@ -53,6 +67,16 @@ export const Juego = ({ dificultad }) => {
   }
 
   const pregunta = preguntas[preguntaActual];
+
+  if (juegoTerminado) {
+    return (
+      <>
+        <h2>Juego Terminado</h2>
+        <h3>Puntaje Final: {puntaje} de {preguntas.length}</h3>
+        <BotonDificultad texto="Reiniciar Juego" onClick={onReiniciar} />
+      </>
+    );
+  }
 
   // Creamos un array de opciones para mapearlas dinámicamente
   const opciones = [
@@ -64,6 +88,10 @@ export const Juego = ({ dificultad }) => {
 
   return (
     <>
+      <div className="juego-header">
+        <span>Puntaje: {puntaje}</span>
+        <button onClick={onReiniciar} className="reiniciar-btn">Reiniciar</button>
+      </div>
       <h2>{pregunta?.question}</h2>
       <div className='dificultad-botones'>
         {opciones.map((opcion) => {
@@ -77,11 +105,16 @@ export const Juego = ({ dificultad }) => {
               texto={opcion.texto}
               onClick={() => handleOpcionClick(opcion.key)}
               estado={estadoBoton}
-              disabled={juegoTerminado || opcionSeleccionada}
+              disabled={opcionSeleccionada}
             />
           );
         })}
       </div>
+      {opcionSeleccionada && (
+        <div className="siguiente-pregunta-container">
+          <BotonDificultad texto="Siguiente Pregunta" onClick={handleSiguientePregunta} />
+        </div>
+      )}
     </>
   );
 };
