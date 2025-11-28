@@ -4,14 +4,13 @@ import { BotonDificultad } from './BotonDificultad';
 import './dificultad.css'; 
 
 export const Juego = ({ dificultad, onReiniciar }) => {
+
   const [preguntas, setPreguntas] = useState([]);
   const [preguntaActual, setPreguntaActual] = useState(0);
   const [cargando, setCargando] = useState(true);
   const [puntaje, setPuntaje] = useState(0);
-  // Nuevos estados para manejar la respuesta
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
   const [resultadoRespuesta, setResultadoRespuesta] = useState(null);
-  // Este estado ahora indica que se han respondido todas las preguntas.
   const [juegoTerminado, setJuegoTerminado] = useState(false);
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export const Juego = ({ dificultad, onReiniciar }) => {
   }, [dificultad]); // Se ejecuta si la dificultad cambia
 
   const handleOpcionClick = async (opcionKey) => {
-    // Si ya se respondió o el juego terminó, no hacer nada.
+
     if (opcionSeleccionada) return;
 
     const preguntaId = preguntas[preguntaActual].id;
@@ -41,8 +40,9 @@ export const Juego = ({ dificultad, onReiniciar }) => {
       setResultadoRespuesta(resultado);
 
       if (resultado.answer) {
-        // Si la respuesta es correcta, incrementamos el puntaje.
+
         setPuntaje(puntajeAnterior => puntajeAnterior + 1);
+
       }
     } catch (error) {
       console.error('Error al enviar la respuesta:', error);
@@ -50,14 +50,14 @@ export const Juego = ({ dificultad, onReiniciar }) => {
   };
 
   const handleSiguientePregunta = () => {
-    // Verificamos si hay más preguntas
+
     if (preguntaActual < preguntas.length - 1) {
+      
       setPreguntaActual(preguntaActual + 1);
-      // Reseteamos los estados para la nueva pregunta
       setOpcionSeleccionada(null);
       setResultadoRespuesta(null);
+
     } else {
-      // Si no hay más preguntas, terminamos el juego.
       setJuegoTerminado(true);
     }
   };
@@ -79,7 +79,6 @@ export const Juego = ({ dificultad, onReiniciar }) => {
     );
   }
 
-  // Creamos un array de opciones para mapearlas dinámicamente
   const opciones = [
     { key: 'option1', texto: pregunta?.option1 },
     { key: 'option2', texto: pregunta?.option2 },
@@ -98,9 +97,10 @@ export const Juego = ({ dificultad, onReiniciar }) => {
         {opciones.map((opcion) => {
           let estadoBoton = '';
           if (opcionSeleccionada === opcion.key) {
-            // Solo asignamos una clase si ya tenemos el resultado de la API.
+
             if (resultadoRespuesta)
               estadoBoton = resultadoRespuesta.answer ? 'correcto' : 'incorrecto';
+            
           }
           return (
             <BotonDificultad
