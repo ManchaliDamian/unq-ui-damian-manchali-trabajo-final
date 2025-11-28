@@ -10,6 +10,7 @@ export const Juego = ({ dificultad, onReiniciar }) => {
   const [cargando, setCargando] = useState(true);
   const [puntaje, setPuntaje] = useState(0);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
+  const [resultadoRespuesta, setResultadoRespuesta] = useState(null);
   const [error, setError] = useState(null);
   const [juegoTerminado, setJuegoTerminado] = useState(false);
 
