@@ -6,8 +6,9 @@
   width: 50%;
   padding: 1rem;
   background-color: #e9ecef;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 20px;
+  padding-top: 3rem;
 }
 
 .app-header {
@@ -32,6 +33,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 3rem;
   padding: 1rem;
 }

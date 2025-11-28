@@ -71,8 +71,9 @@ export const Juego = ({ dificultad, onReiniciar }) => {
   if (juegoTerminado) {
     return (
       <>
-        <h2>Juego Terminado</h2>
-        <h3>Puntaje Final: {puntaje} de {preguntas.length}</h3>
+        <h1>Juego Terminado</h1>
+        <h2>Puntaje Final: {puntaje} de {preguntas.length}</h2>
+        <h3>Querés jugar otra vez?</h3>
         <BotonDificultad texto="Reiniciar Juego" onClick={onReiniciar} />
       </>
     );
@@ -97,7 +98,9 @@ export const Juego = ({ dificultad, onReiniciar }) => {
         {opciones.map((opcion) => {
           let estadoBoton = '';
           if (opcionSeleccionada === opcion.key) {
-            estadoBoton = resultadoRespuesta?.answer ? 'correcto' : 'incorrecto';
+            // Solo asignamos una clase si ya tenemos el resultado de la API.
+            if (resultadoRespuesta)
+              estadoBoton = resultadoRespuesta.answer ? 'correcto' : 'incorrecto';
           }
           return (
             <BotonDificultad
